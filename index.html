@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorting Algorithms</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Sorting Algorithms</h1>
+        <p>An in-depth explanation of the most popular sorting algorithms in computer science.</p>
+        <p>Universidad de las Américas Puebla UDLAP</p>
+        <p>Rafael Corro Campos</p>
+        <p>Rodrigo Daniel Carretero Santamaría</p>
+    </header>
+    <main>
+        <section id="introduction" class="topic">
+            <h2>Introduction</h2>
+            <p>
+                Data sorting is a fundamental task in computer science and a crucial operation in numerous computer systems. It involves reorganizing a set of elements in a defined order, such as ascending or descending, based on a predefined criterion. This process not only enhances data readability and accessibility but also optimizes the performance of other algorithms, such as search algorithms, which operate more efficiently on sorted data.
+            </p>
+            <p>
+                Over time, various sorting methods have been developed, each with specific characteristics that make them more or less suitable depending on the situation. In this essay, we will thoroughly explore five of the most well-known sorting algorithms: Bubble Sort, Insertion Sort, Selection Sort, Merge Sort, and Quick Sort. Their history, functionality, detailed examples, and performance in different scenarios will be analyzed.
+            </p>
+        </section>
+        
+        <nav class="index">
+            <ul>
+                <li><button onclick="document.getElementById('bubble').scrollIntoView({ behavior: 'smooth' });">Bubble Sort</button></li>
+                <li><button onclick="document.getElementById('insertion').scrollIntoView({ behavior: 'smooth' });">Insertion Sort</button></li>
+                <li><button onclick="document.getElementById('selection').scrollIntoView({ behavior: 'smooth' });">Selection Sort</button></li>
+                <li><button onclick="document.getElementById('merge').scrollIntoView({ behavior: 'smooth' });">Merge Sort</button></li>
+                <li><button onclick="document.getElementById('quick').scrollIntoView({ behavior: 'smooth' });">Quick Sort</button></li>
+            </ul>
+        </nav>
+        
+
+        <section id="bubble" class="topic">
+            <h2>Bubble Sort</h2>
+            <img src="1.jpg" alt="Bubble Sort">
+            <p><strong>History:</strong> Bubble Sort is one of the oldest and simplest algorithms. It was introduced during the early days of computing when data processing was limited by rudimentary hardware. Although it is now considered inefficient, it is still used in educational contexts due to its simplicity and its ease in explaining basic concepts of algorithms and data structures.</p>
+            <p><strong>Functioning:</strong> Bubble Sort compares adjacent pairs of elements in a list and swaps them if they are in the wrong order. This process is repeated for each element, moving the largest values to the end of the list as if they were "floating," similar to the movement of bubbles in a liquid.</p>
+            <ol>
+                <li>Compare the first and second elements.</li>
+                <li>Swap them if they are out of order.</li>
+                <li>Repeat for the subsequent pairs.</li>
+                <li>Continue until no swaps are made in a complete pass.</li>
+            </ol>
+            <p><strong>Example:</strong></p>
+            <ul>
+                <li>Compare 5 and 3 → [3, 5, 8, 4]</li>
+                <li>Compare 5 and 8 → [3, 5, 8, 4]</li>
+                <li>Compare 8 and 4 → [3, 5, 4, 8]</li>
+                <li>Second pass: [3, 4, 5, 8] (the list is now sorted).</li>
+            </ul>
+            <p><strong>Complexity:</strong> Best: \(O(n)\), Worst: \(O(n^2)\), Average: \(O(n^2)\).</p>
+        </section>
+        
+
+        <div id="chatbot-container">
+            <div id="chatbot-header">Chatbot</div>
+            <div id="chatbot-messages"></div>
+            <div id="chatbot-input-area">
+                <input type="text" id="chatbot-input" placeholder="Ask a question...">
+                <button id="chatbot-send">Send</button>
+            </div>
+        </div>
+        
+        <script>
+            // Elementos del DOM
+            const chatbotMessages = document.getElementById('chatbot-messages');
+            const chatbotInput = document.getElementById('chatbot-input');
+            const chatbotSend = document.getElementById('chatbot-send');
+    
+            // Mostrar mensaje en el área del chatbot
+            function displayMessage(message, sender) {
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add('message', sender);
+    messageDiv.textContent = message;
+    chatbotMessages.appendChild(messageDiv);
+    chatbotMessages.scrollTop = chatbotMessages.scrollHeight; // Desplazar al último mensaje
+}
+
+    
+            // Enviar mensaje al servidor y manejar la respuesta
+            async function sendMessage() {
+    const userMessage = chatbotInput.value.trim();
+    if (!userMessage) return; // No enviar mensajes vacíos
+
+    // Mostrar el mensaje del usuario
+    displayMessage(userMessage, 'user');
+    chatbotInput.value = ''; // Limpiar el campo de entrada
+
+    try {
+        const response = await fetch('http://localhost:3000/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ message: userMessage }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log("Respuesta del servidor:", data); // Depuración
+
+        // Verifica y muestra la respuesta
+        if (data.reply) {
+            displayMessage(data.reply, 'bot');
+        } else {
+            displayMessage("No se recibió respuesta del modelo.", 'bot');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        displayMessage('Error al obtener respuesta del servidor.', 'bot');
+    }
+}
+
+
+    
+            // Enviar mensaje al hacer clic en el botón
+            chatbotSend.addEventListener('click', sendMessage);
+    
+            // Enviar mensaje al presionar Enter
+            chatbotInput.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+        </script>
+        
+
+
+        <section id="insertion" class="topic">
+            <h2>Insertion Sort</h2>
+            <img src="2.jpg" alt="Insertion Sort">
+            <p><strong>History:</strong> Insertion Sort is inspired by the natural method of sorting cards in a hand. It is intuitive and effective for small or nearly sorted lists. It has been widely used since the early days of programming due to its simplicity.</p>
+            <p><strong>Functioning:</strong> Insertion Sort divides the list into two parts: a sorted part and an unsorted part. Elements from the unsorted part are extracted one by one and inserted into the correct position in the sorted part.</p>
+            <ol>
+                <li>Start with the second element as the reference.</li>
+                <li>Compare it with elements in the sorted part.</li>
+                <li>Insert it into the correct position.</li>
+                <li>Repeat until all elements are sorted.</li>
+            </ol>
+            <p><strong>Example:</strong></p>
+            <ul>
+                <li>Initial list: [7, 2, 4]</li>
+                <li>Take 2 and compare it with 7 → [2, 7, 4]</li>
+                <li>Take 4 and compare it with 7 → [2, 4, 7]</li>
+            </ul>
+            <p><strong>Complexity:</strong> Best: \(O(n)\), Worst: \(O(n^2)\), Average: \(O(n^2)\).</p>
+        </section>
+
+        <section id="selection" class="topic">
+            <h2>Selection Sort</h2>
+            <img src="3.jpg" alt="Selection Sort">
+            <p><strong>History:</strong> Selection Sort was designed to illustrate basic sorting principles. Although it is not time-efficient, its implementation is straightforward, making it useful for teaching data structures and algorithms.</p>
+            <p><strong>Functioning:</strong> Selection Sort finds the smallest element in each iteration and places it in its correct position. This process is repeated for the remaining elements.</p>
+            <ol>
+                <li>Find the smallest element in the list.</li>
+                <li>Swap it with the first element.</li>
+                <li>Repeat for the remaining elements.</li>
+            </ol>
+            <p><strong>Example:</strong></p>
+            <ul>
+                <li>Initial list: [29, 10, 14, 37, 13]</li>
+                <li>Find the smallest (10) → [10, 29, 14, 37, 13]</li>
+                <li>Find the smallest (13) → [10, 13, 14, 37, 29]</li>
+            </ul>
+            <p><strong>Complexity:</strong> Best: \(O(n^2)\), Worst: \(O(n^2)\), Average: \(O(n^2)\).</p>
+        </section>
+
+        
+
+        <section id="merge" class="topic">
+            <h2>Merge Sort</h2>
+            <img src="4.png" alt="Merge Sort">
+            <p><strong>History:</strong> Merge Sort was created by John von Neumann in 1945. This algorithm introduced the idea of divide and conquer, marking a milestone in the development of efficient algorithms.</p>
+            <p><strong>Functioning:</strong> Merge Sort divides the list into halves until each sublist contains a single element. Then, it merges the sorted sublists to produce the final result.</p>
+            <ol>
+                <li>Divide the list into two equal parts.</li>
+                <li>Sort each part recursively.</li>
+                <li>Merge the sorted parts.</li>
+            </ol>
+            <p><strong>Example:</strong></p>
+            <ul>
+                <li>Initial list: [38, 27, 43, 3]</li>
+                <li>Steps: Split: [38, 27], [43, 3] → Sort: [27, 38], [3, 43] → Merge: [3, 27, 38, 43]</li>
+            </ul>
+            <p><strong>Complexity:</strong> Best, Worst, Average: \(O(n \log n)\).</p>
+        </section>
+
+        <section id="quick" class="topic">
+            <h2>Quick Sort</h2>
+            <img src="5.png" alt="Quick Sort">
+            <p><strong>History:</strong> Quick Sort was invented by Tony Hoare in 1960. It is one of the most efficient and widely used algorithms in practice.</p>
+            <p><strong>Functioning:</strong> Quick Sort selects a pivot and organizes elements smaller than the pivot to the left and those larger to the right. This process is applied recursively to the sublists.</p>
+            <ol>
+                <li>Select a pivot.</li>
+                <li>Divide the list into two parts based on the pivot.</li>
+                <li>Sort each part recursively.</li>
+            </ol>
+            <p><strong>Example:</strong></p>
+            <ul>
+                <li>Initial list: [8, 3, 1, 7]</li>
+                <li>Pivot: 3 → [1, 3, 8, 7]</li>
+                <li>Sublists: [1], [7, 8] → [1, 3, 7, 8]</li>
+            </ul>
+            <p><strong>Complexity:</strong> Best: \(O(n \log n)\), Worst: \(O(n^2)\), Average: \(O(n \log n)\).</p>
+        </section>
+
+        <section id="conclusion" class="topic">
+            <h2>Conclusion</h2>
+            <p>
+                Sorting algorithms are foundational to computer science, playing a vital role in data organization, analysis, and processing. Each algorithm has unique strengths and weaknesses that make it suitable for different scenarios, whether it's the simplicity of Bubble Sort and Selection Sort for educational purposes, the efficiency of Insertion Sort for small or nearly sorted datasets, or the robust performance of Merge Sort and Quick Sort for handling larger datasets.
+            </p>
+            <p>
+                Bubble Sort, despite its inefficiency for large datasets, remains an excellent tool for teaching fundamental concepts of algorithms. Insertion Sort, on the other hand, strikes a balance between simplicity and practicality, making it a reliable choice for scenarios involving smaller or partially sorted lists. Selection Sort’s straightforward methodology allows beginners to understand sorting mechanics, even though its time complexity limits its real-world applicability.
+            </p>
+            <p>
+                Merge Sort and Quick Sort demonstrate the power of divide-and-conquer strategies in sorting. Merge Sort excels in stability and predictable performance, especially for data that requires guaranteed sorting times. However, its additional space requirements can be a limitation. Quick Sort, with its in-place sorting capability and efficiency in average-case scenarios, has become the preferred choice in practical applications, especially when memory constraints and performance are critical considerations.
+            </p>
+            <p>
+                Beyond theoretical analysis, real-world applications often dictate the choice of a sorting algorithm. Factors such as data size, memory constraints, and specific requirements like stability or adaptability to nearly sorted datasets can determine which algorithm is most appropriate. Additionally, understanding the trade-offs between time complexity and implementation simplicity is essential for developers and
+            </p>
+            <p>
+                In conclusion, mastering sorting algorithms is not merely about learning their mechanics but also about understanding their optimal use cases and limitations. This knowledge empowers developers to write efficient and scalable software, ensuring that the chosen algorithm aligns with the specific requirements of their application. Sorting is not just a computational necessity but a gateway to deeper insights into algorithm design, analysis, and performance optimization.
+            </p>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Sorting Algorithms Page</p>
+    </footer>
+
+   
+</body>
+</html>
